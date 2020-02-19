@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 6.2.2
- * Release date: 19/12/2018 (built at 18/12/2018 14:40:17)
+ * Release date: 19/12/2018 (built at 19/02/2020 16:30:53)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -29734,7 +29734,7 @@ Handsontable.DefaultSettings = _defaultSettings.default;
 Handsontable.EventManager = _eventManager.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = "18/12/2018 14:40:17";
+Handsontable.buildDate = "19/02/2020 16:30:53";
 Handsontable.packageName = "handsontable";
 Handsontable.version = "6.2.2";
 var baseVersion = "";
@@ -52669,12 +52669,23 @@ function tableToArray(element) {
     var tempArray = [];
 
     for (var row = 0; row < rowsLen; row += 1) {
-      var cells = rows[row].cells;
+      var rawCells = rows[row].cells;
+      var cells = [];
+
+      for (var column = 0; column < rawCells.length; column += 1) {
+        var rawCell = rawCells[column];
+        cells.push(rawCell); // If colspan is > 1, add empty cells
+
+        for (var i = 1; i < rawCell.colSpan; i += 1) {
+          cells.push(document.createElement('td'));
+        }
+      }
+
       var cellsLen = cells.length;
       var newRow = [];
 
-      for (var column = 0; column < cellsLen; column += 1) {
-        var cell = cells[column];
+      for (var _column = 0; _column < cellsLen; _column += 1) {
+        var cell = cells[_column];
         cell.innerHTML = cell.innerHTML.trim().replace(/<br(.|)>(\n?)/, '\n');
         var cellText = cell.innerText;
         newRow.push(cellText);
