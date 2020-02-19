@@ -71,7 +71,17 @@ export function tableToArray(element) {
     const tempArray = [];
 
     for (let row = 0; row < rowsLen; row += 1) {
-      const cells = rows[row].cells;
+      const rawCells = rows[row].cells;
+      const cells = [];
+      for (let column = 0; column < rawCells.length; column += 1) {
+        const rawCell = rawCells[column];
+        cells.push(rawCell);
+
+        // If colspan is > 1, add empty cells
+        for (let i = 1; i < rawCell.colSpan; i += 1) {
+          cells.push(document.createElement('td'));
+        }
+      }
       const cellsLen = cells.length;
       const newRow = [];
 
